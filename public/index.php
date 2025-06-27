@@ -1,5 +1,10 @@
 <?php
-use Doliprane\Router\Router;
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../config/env.php';
 
-require dirname(__DIR__) . '/lib/autoload.php';
-new Router();
+use App\Core\App;
+
+session_start();
+
+$app = new App();
+$app->run();
