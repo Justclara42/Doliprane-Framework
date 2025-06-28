@@ -7,9 +7,8 @@ class View {
         include __DIR__ . '/../../templates/' . $template . '.php';
     }
 
-    public static function layout(string $layout, string $template, array $data = []): void {
-        extract($data);
-        $templateFile = __DIR__ . '/../../templates/' . $template . '.php';
-        include __DIR__ . '/../../templates/layouts/' . $layout . '.php';
+    public static function layout(string $layout, string $template) {
+        $templateFile = __DIR__ . "/../../templates/$template.php";
+        require __DIR__ . "/../../templates/layouts/$layout.php";
     }
 }
