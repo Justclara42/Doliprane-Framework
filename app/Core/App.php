@@ -1,10 +1,13 @@
 <?php
 namespace App\Core;
 
+use App\Core\Lang;
+
+
 class App {
     public Router $router;
-
     public function __construct() {
+        Lang::setLocale($_SESSION['lang'] ?? 'fr_FR');
         $this->router = new Router(__DIR__ . '/../../config/routes.php');
     }
 

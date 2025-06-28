@@ -7,4 +7,5 @@ class HomeController extends Controller {
     public function index() {
         View::layout('base', 'home');
     }
+
 }

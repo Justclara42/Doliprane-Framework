@@ -37,12 +37,20 @@
         <a href="/about" class="block hover:underline">À propos</a>
         <a href="/docs" class="block hover:underline">Docs</a>
         <a href="https://github.com/Justclara42/Doliprane-Framework" target="_blank" class="block hover:underline">GitHub</a>
+        <form method="POST" action="/set-lang" class="inline-block ml-4">
+            <label for="lang_sel" class="sr-only">{% lang_select %}</label>
+            <select id="lang_sel" name="lang" onchange="this.form.submit()"
+                    class="bg-white text-black rounded px-2 py-1 border">
+                <option value="fr_FR" <?= ($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '' ?>>🇫🇷 FR</option>
+                <option value="en_US" <?= ($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '' ?>>🇬🇧 EN</option>
+            </select>
+        </form>
     </nav>
 </header>
 
 <!-- MAIN -->
 <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
-    <?php include $templateFile; ?>
+    <?= $GLOBALS['__view_translated_content'] ?? '' ?>
 </main>
 
 <!-- FOOTER -->

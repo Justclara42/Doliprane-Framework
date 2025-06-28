@@ -4,8 +4,10 @@
       "App\\": "app/"
     }
   },
+  "bin": ["app/Commands/LangScanCommand.php"],
   "require": {
     "vlucas/phpdotenv": "^5.5",
-    "illuminate/database": "^12.19"
+    "illuminate/database": "^12.19",
+    "symfony/console": "^7.3"
   }
 }
