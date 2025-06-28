@@ -1,0 +1,17 @@
+[data-lucide] {
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.tooltip {
+    white-space: nowrap;
+    z-index: 50;
+}
+
+#sidebar[data-expanded="false"] .tooltip {
+    display: block !important;
+}
+
+#sidebar[data-expanded="true"] .tooltip {
+    display: none !important;
+}

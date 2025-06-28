@@ -1,0 +1,40 @@
+# 📦 Dépendances Node.js
+node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# 🧪 Fichiers de test ou builds temporaires
+dist/
+build/
+*.log
+
+# ⚙️ IDE et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 🧰 Dépendances PHP
+/vendor
+composer.lock
+
+# ⚙️ Environnement local
+.env
+.env.*.local
+.env.local
+
+# 🚫 Fichiers système ou divers
+*.bak
+*.swp
+*.swo
+*.tmp
+
+# 📦 Artefacts d'exécution
+/public/assets/js/*.js
+/public/assets/css/*.css
+/public/assets/js/*.map
+/public/assets/css/*.map
+
+# 🌐 Cache navigateur
+.cache/
