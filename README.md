@@ -98,7 +98,8 @@ php -S localhost:8000 -t public
  └── js/            ← app.js (menu, docs)
 
 📁 templates/
- ├── base.php
+ ├── laouts/
+        ├── base.php
  └── home.php etc.
 
 .gitignore
