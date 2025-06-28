@@ -9,7 +9,7 @@ return [
     ['GET', '/about', 'PageController@about'],
     ['GET', '/docs', 'PageController@docs'],
     ['GET', '/post/{id}/{slug}', 'PostController@view'],
-    ['POST', '/set-lang', 'LangController@set'],
+    ['POST', '/set-lang', 'LangController@switch'],
     // API REST
     ['GET', '/api/posts', 'Api\PostController@index'],
     ['GET', '/api/posts/{id}', 'Api\PostController@show'],

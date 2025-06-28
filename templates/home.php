@@ -1,5 +1,5 @@
 <section class="bg-white p-6 rounded shadow-md">
-    <h2 class="text-2xl font-bold text-[#0074D9] mb-4">{% bienvenue %}</h2>
+    <h2 class="text-2xl font-bold text-[#0074D9] mb-4">{% welcome %}</h2>
     <h2 class="text-2xl font-bold text-[#0074D9] mb-4">Qu'est-ce que le Doliprane Framework ?</h2>
     <p class="mb-3 leading-relaxed">
         <strong>Doliprane Framework</strong> est un micro-framework PHP en MVC léger, rapide, facile à comprendre et à étendre.
