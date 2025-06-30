@@ -1,0 +1,10 @@
+<?php
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+return new class {
+    public function run() {
+        Capsule::table('{{ table }}')->insert([
+            'name' => 'Exemple'
+        ]);
+    }
+};

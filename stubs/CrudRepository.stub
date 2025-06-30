@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\{{ modelName }};
+
+class {{ modelName }}Repository
+{
+    public function all()
+    {
+        return {{ modelName }}::all();
+    }
+
+    public function find($id)
+    {
+        return {{ modelName }}::find($id);
+    }
+}

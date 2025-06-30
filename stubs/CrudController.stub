@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Core\Controller;
+use App\Models\{{ modelName }};
+use App\Repositories\{{ modelName }}Repository;
+
+class {{ modelName }}Controller extends Controller
+{
+    public function index()
+    {
+        $items = {{ modelName }}::all();
+        View::layout('base', '{{ viewFolder }}/index', ['items' => $items]);
+    }
+
+    public function show($id)
+    {
+        $item = {{ modelName }}::findOrFail($id);
+        View::layout('base', '{{ viewFolder }}/show', ['item' => $item]);
+    }
+
+    public function create()
+    {
+        View::layout('base', '{{ viewFolder }}/create');
+    }
+
+    public function edit($id)
+    {
+        $item = {{ modelName }}::findOrFail($id);
+        View::layout('base', '{{ viewFolder }}/edit', ['item' => $item]);
+    }
+}

@@ -6,11 +6,13 @@ require __DIR__ . '/../config/env.php';
 
 use App\Core\App;
 use App\Core\Eloquent;
+use App\Core\DatabaseManager;
 
 session_start();
 if (isset($_GET['lang'])) {
     $_SESSION['lang'] = $_GET['lang'];
 }
+DatabaseManager::init();
 
 Eloquent::boot();
 $app = new App();

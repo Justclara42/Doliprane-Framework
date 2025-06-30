@@ -1,0 +1,15 @@
+<?php
+// Doliprane Framework - Générateur de code PHP
+
+namespace App\Controllers;
+
+use App\Core\Controller;
+use App\Core\View; // Classe pour gérer les vues
+
+class {{ className }} extends Controller
+{
+    public function index()
+    {
+        echo "{{ className }} fonctionne correctement.";
+    }
+}

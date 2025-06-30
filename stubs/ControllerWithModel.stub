@@ -1,0 +1,18 @@
+<?php
+// Doliprane Framework - Générateur de code PHP
+
+namespace App\Controllers;
+
+use App\Core\Controller;
+use App\Core\View; // Classe pour gérer les vues
+use App\Models\{{ modelName }}; // Modèle associé
+
+class {{ className }} extends Controller
+{
+    public function index()
+    {
+        // Exemple : afficher une vue avec des données du modèle
+        //$items = {{ modelName }}::all();
+        //View::layout('base', 'your_view_template', ['items' => $items]);
+    }
+}
