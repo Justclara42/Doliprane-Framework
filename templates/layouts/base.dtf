@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>@yield("title")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <script defer src="/assets/lucide/lucide.min.js"></script>
+    <script defer src="/assets/js/app.js"></script>
+    @stack("head")
+</head>
+<body class="bg-[#FFE600] text-gray-900 min-h-screen flex flex-col font-sans">
+    {% include "layouts/partials/header" %}
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
+        @yield("content")
+    </main>
+
+    {% include "layouts/partials/footer" %}
+
+    @stack("scripts")
+</body>
+</html>

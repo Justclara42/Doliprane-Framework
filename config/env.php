@@ -3,6 +3,7 @@
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
+
 if (!function_exists('base_path')) {
     function base_path($path = '') {
         return ROOT . ($path ? DIRECTORY_SEPARATOR . $path : '');

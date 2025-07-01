@@ -1,0 +1,3 @@
+<footer class="bg-[#0074D9] text-white text-center py-4 mt-8">
+    &copy; <?= htmlspecialchars(date("Y")) ?> Doliprane Framework — <?= lang("all_rights_reserved") ?>
+</footer>

@@ -1,0 +1,74 @@
+@extends("layouts/base")
+
+@section("title")
+    Documentation
+@endsection
+
+@section("content")
+<div id="docs" class="flex min-h-[80vh]">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+           class="transition-all duration-300 ease-in-out bg-white shadow p-4 space-y-4 w-64 overflow-hidden"
+           data-expanded="true">
+        <button id="toggleSidebar" class="flex items-center gap-2 text-sm font-semibold mb-4 hover:underline">
+            <i data-lucide="chevron-left"></i>
+            <span class="text">{{ lang("collapse_sidebar") }}</span>
+        </button>
+
+        <nav class="flex flex-col space-y-3">
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="intro">
+                <i data-lucide="book" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_intro") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_intro") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="routes">
+                <i data-lucide="git-branch" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_routes") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_routes") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="controllers">
+                <i data-lucide="layers" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_controllers") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_controllers") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="models">
+                <i data-lucide="layers" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_models") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_models") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="views">
+                <i data-lucide="eye" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_views") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_views") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="eloquent">
+                <i data-lucide="database" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_eloquent") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_eloquent") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="relations">
+                <i data-lucide="link" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_relations") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_relations") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="api">
+                <i data-lucide="cloud" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_api") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_api") }}</span>
+            </button>
+            <button class="flex items-center gap-2 text-left hover:text-blue-600 relative group" data-doc="env">
+                <i data-lucide="settings" class="pointer-events-none"></i>
+                <span class="text">{{ lang("doc_env") }}</span>
+                <span class="absolute left-full ml-2 hidden group-hover:block bg-gray-700 text-white text-xs px-2 py-1 rounded shadow tooltip">{{ lang("doc_env") }}</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <section id="doc-content" class="flex-1 p-6 bg-white rounded shadow">
+        <h2 class="text-xl font-bold mb-4">{{ lang("documentation") }}</h2>
+        <p>{{ lang("choose_topic") }}</p>
+    </section>
+</div>
+@endsection

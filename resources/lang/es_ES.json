@@ -1,0 +1,19 @@
+{
+  "welcome": "Bienvenido al Doliprane Framework",
+  "lang_select": "Seleccione su idioma",
+  "all_rights_reserved": "Todos los derechos reservados",
+  "home": "Inicio",
+  "about": "Acerca de",
+  "documentation": "Documentación",
+  "choose_topic": "Elija un tema en el menú de la izquierda.",
+  "collapse_sidebar": "Colapsar",
+  "doc_intro": "Introducción",
+  "doc_routes": "Sistema de rutas",
+  "doc_controllers": "Controladores",
+  "doc_models": "Modelos",
+  "doc_views": "Vistas",
+  "doc_eloquent": "Eloquent ORM",
+  "doc_relations": "Relaciones ORM",
+  "doc_api": "API REST",
+  "doc_env": "Archivo .env"
+}

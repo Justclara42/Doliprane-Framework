@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 
 class Lang
@@ -6,23 +7,38 @@ class Lang
     private static array $translations = [];
     private static string $locale = 'fr_FR';
 
+    /**
+     * Définit la langue active et charge le fichier de traduction associé
+     */
     public static function setLocale(string $locale): void
     {
         self::$locale = $locale;
-        $file = __DIR__ . '/../../lang/' . $locale . '.json';
+        $file = dirname(__DIR__, 2) . '/resources/lang/' . $locale . '.json';
+        file_put_contents('lang_debug.log', "Chargement de $locale -> $file\n", FILE_APPEND);
 
         if (file_exists($file)) {
-            self::$translations = json_decode(file_get_contents($file), true);
+            $json = file_get_contents($file);
+            $data = json_decode($json, true);
+            self::$translations = is_array($data) ? $data : [];
         } else {
             self::$translations = [];
         }
     }
 
-    public static function translate(string $content): string
+    /**
+     * Récupère la traduction d'une clé, ou retourne la clé elle-même si absente
+     */
+    public static function get(string $key): string
     {
-        return preg_replace_callback('/\{\%\s*(.*?)\s*\%\}/', function ($matches) {
-            $key = $matches[1];
-            return self::$translations[$key] ?? "{% $key %}";
-        }, $content);
+        return self::$translations[$key] ?? $key;
+    }
+
+    /**
+     * Récupère la locale actuelle
+     */
+    public static function getLocale(): string
+    {
+        return self::$locale;
     }
 }
+
