@@ -38,7 +38,7 @@ class MakeMigrationCommand extends Command
 
         $fields = [];
 
-        // id
+        // Champ ID auto
         $fields[] = ['name' => 'id', 'type' => 'id', 'nullable' => false, 'primary' => true];
         $hasPrimary = true;
 
@@ -48,7 +48,7 @@ class MakeMigrationCommand extends Command
 
             $fieldType = $helper->ask($input, $output, new ChoiceQuestion(
                 "📦 Type du champ :",
-                ['string', 'text', 'integer', 'boolean', 'timestamp', 'date', 'float', 'double'],
+                ['string', 'text', 'integer', 'boolean', 'timestamp', 'date', 'float', 'double', 'email', 'password'],
                 0
             ));
 
@@ -60,9 +60,16 @@ class MakeMigrationCommand extends Command
                 if ($primary) $hasPrimary = true;
             }
 
+            // Corrige le type pour la migration si c’est un type spécial
+            $originalType = $fieldType;
+            if (in_array($fieldType, ['email', 'password'])) {
+                $fieldType = 'string';
+            }
+
             $fields[] = [
                 'name' => $fieldName,
                 'type' => $fieldType,
+                'original' => $originalType,
                 'nullable' => $nullable,
                 'primary' => $primary,
             ];
@@ -71,21 +78,18 @@ class MakeMigrationCommand extends Command
             if (!$addMore) break;
         }
 
-        // timestamps
         $fields[] = ['name' => 'timestamps', 'type' => 'timestamps', 'nullable' => false, 'primary' => false];
 
-        // génération fichier
+        // Génération du fichier de migration
         $timestamp = date('Y_m_d_His');
         $filename = "{$timestamp}_create_{$tableName}_table.php";
         $path = __DIR__ . "/../../database/migrations/{$filename}";
 
-        $stubPath = __DIR__ . '/../../stubs/migration.stub';
-        if (!file_exists($stubPath)) {
-            $output->writeln("<error>❌ Le fichier stub n'existe pas.</error>");
+        $stub = file_get_contents(__DIR__ . '/../../stubs/migration.stub');
+        if (!$stub) {
+            $output->writeln("<error>❌ Le fichier migration.stub est manquant.</error>");
             return Command::FAILURE;
         }
-
-        $stub = file_get_contents($stubPath);
 
         $fieldsCode = '';
         foreach ($fields as $field) {
@@ -97,17 +101,45 @@ class MakeMigrationCommand extends Command
                 $line = "            \$table->{$field['type']}('{$field['name']}')";
                 if ($field['nullable']) $line .= "->nullable()";
                 if ($field['primary']) $line .= "->primary()";
-                $line .= ";";
-                $fieldsCode .= $line . "\n";
+                $fieldsCode .= $line . ";\n";
             }
         }
 
         $stub = str_replace('{{ table }}', $tableName, $stub);
         $stub = str_replace('{{ fields }}', rtrim($fieldsCode), $stub);
-
         file_put_contents($path, $stub);
-
         $output->writeln("<info>✅ Migration générée : database/migrations/{$filename}</info>");
+
+        // Génération du fichier de seeder
+        $seederStub = file_get_contents(__DIR__ . '/../../stubs/seeder.stub');
+        if (!$seederStub) {
+            $output->writeln("<error>❌ Le fichier seeder.stub est manquant.</error>");
+            return Command::FAILURE;
+        }
+
+        $fieldsSeed = [];
+        foreach ($fields as $field) {
+            if (in_array($field['name'], ['id', 'timestamps'])) continue;
+
+            $line = match ($field['original']) {
+                'email'     => "'{$field['name']}' => \$faker->unique()->safeEmail()",
+                'password'  => "'{$field['name']}' => password_hash('password', PASSWORD_DEFAULT)",
+                'string', 'text' => "'{$field['name']}' => \$faker->sentence(3)",
+                'integer'   => "'{$field['name']}' => \$faker->numberBetween(1, 100)",
+                'boolean'   => "'{$field['name']}' => \$faker->boolean()",
+                'timestamp','date' => "'{$field['name']}' => \$faker->dateTime()->format('Y-m-d H:i:s')",
+                'float','double' => "'{$field['name']}' => \$faker->randomFloat(2, 0, 1000)",
+                default     => "'{$field['name']}' => \$faker->word()",
+            };
+            $fieldsSeed[] = "                $line";
+        }
+
+        $seederFields = implode(",\n", $fieldsSeed);
+        $seederContent = str_replace(['{{ table }}', '{{ fields }}'], [$tableName, $seederFields], $seederStub);
+        $seederPath = __DIR__ . "/../../database/seeders/{$timestamp}_seed_{$tableName}_table.php";
+        file_put_contents($seederPath, $seederContent);
+
+        $output->writeln("<info>🌱 Seeder généré : database/seeders/{$timestamp}_seed_{$tableName}_table.php</info>");
 
         return Command::SUCCESS;
     }

@@ -1,7 +1,7 @@
 <?php
 use App\Controllers\HomeController;
 use App\Controllers\PageController;
-use App\Controllers\PostController;
+use App\Controllers\UserController;
 
 return [
     // Pages web classiques
@@ -9,6 +9,7 @@ return [
     ['GET', '/about', 'PageController@about'],
     ['GET', '/docs', 'PageController@docs'],
     ['GET', '/post/{id}/{slug}', 'PostController@view'],
+    ['GET', '/users', 'UserController@index'],
     ['POST', '/set-lang', 'LangController@switch'],
     // API REST
     ['GET', '/api/posts', 'Api\PostController@index'],

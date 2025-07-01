@@ -1,46 +1,56 @@
 <?php
 namespace App\Core;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-
 class DatabaseManager
 {
-    public static function init(): void
+    public static function getConfig(): array
     {
-        $capsule = new Capsule;
+        $driver = $_ENV['DB_CONNECTION'] ?? 'sqlite';
+        $config = [
+            'driver' => $driver,
+            'prefix' => '',
+        ];
 
-        $driver = $_ENV['DB_CONNECTION'] ?? 'mysql';
-        $database = $_ENV['DB_DATABASE'] ?? 'doliprane';
+        switch ($driver) {
+            case 'sqlite':
+                $config['database'] = ROOT . '/database/' . ($_ENV['DB_DATABASE'] ?? 'database.sqlite');
+                break;
 
-        if ($driver === 'sqlite') {
-            // Chemin absolu vers le fichier .sqlite
-            $databasePath = realpath(__DIR__ . '/../../database/' . $database . '.sqlite');
+            case 'mysql':
+                $config = array_merge($config, [
+                    'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
+                    'database' => $_ENV['DB_DATABASE'],
+                    'username' => $_ENV['DB_USERNAME'],
+                    'password' => $_ENV['DB_PASSWORD'],
+                    'port' => $_ENV['DB_PORT'] ?? 3306,
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_unicode_ci',
+                ]);
+                break;
 
-            if (!$databasePath) {
-                // Si le fichier n'existe pas encore
-                $databasePath = __DIR__ . '/../../database/' . $database . '.sqlite';
-            }
-
-            $capsule->addConnection([
-                'driver'   => 'sqlite',
-                'database' => $databasePath,
-                'prefix'   => '',
-            ]);
-        } else {
-            $capsule->addConnection([
-                'driver'    => $driver,
-                'host'      => $_ENV['DB_HOST'] ?? '127.0.0.1',
-                'port'      => $_ENV['DB_PORT'] ?? '3306',
-                'database'  => $database,
-                'username'  => $_ENV['DB_USERNAME'] ?? 'root',
-                'password'  => $_ENV['DB_PASSWORD'] ?? '',
-                'charset'   => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix'    => '',
-            ]);
+            case 'pgsql':
+                $config = array_merge($config, [
+                    'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
+                    'database' => $_ENV['DB_DATABASE'],
+                    'username' => $_ENV['DB_USERNAME'],
+                    'password' => $_ENV['DB_PASSWORD'],
+                    'port' => $_ENV['DB_PORT'] ?? 5432,
+                    'charset' => 'utf8',
+                    'schema' => 'public',
+                ]);
+                break;
         }
 
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
+        return [
+            'default' => $driver,
+            'connections' => [
+                $driver => $config,
+            ],
+        ];
+    }
+
+    public static function init(): void
+    {
+        // Rien à faire ici
     }
 }

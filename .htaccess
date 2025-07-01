@@ -1,5 +1,7 @@
 RewriteEngine On
 
-# Redirige toutes les requêtes vers /public
-RewriteCond %{REQUEST_URI} !^/public/
+# Redirige tout vers le dossier public sauf s'il s'agit déjà de public ou d'un fichier/dossier existant
+RewriteCond %{REQUEST_URI} !^/public
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ public/$1 [L]

@@ -8,8 +8,10 @@ return new class {
         $faker = Factory::create();
 
         for ($i = 0; $i < 10; $i++) {
-            Capsule::table('{{ table }}')->insert([
-{{ fields }}
+            Capsule::table('users')->insert([
+                'username' => $faker->sentence(3),
+                'password' => password_hash('password', PASSWORD_DEFAULT),
+                'email' => $faker->sentence(3)
             ]);
         }
     }

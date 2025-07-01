@@ -2,22 +2,15 @@
 namespace App\Core;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use  App\Core\DatabaseManager;
 
-class Eloquent {
-    public static function boot(): void {
+class Eloquent
+{
+    public static function boot(): void
+    {
         $capsule = new Capsule();
-
-        $capsule->addConnection([
-            'driver'    => 'mysql',
-            'host'      => DB_HOST,
-            'database'  => DB_NAME,
-            'username'  => DB_USER,
-            'password'  => DB_PASS,
-            'charset'   => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-        ]);
-
+        $config = DatabaseManager::getConfig();
+        $capsule->addConnection($config['connections'][$config['default']]);
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
     }

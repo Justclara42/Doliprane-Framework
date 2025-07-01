@@ -6,8 +6,8 @@ return new class {
         Capsule::schema()->create('users', function ($table) {
             $table->id();
             $table->string('username');
-            $table->string('email');
             $table->string('password');
+            $table->string('email');
             $table->timestamps();
         });
     }

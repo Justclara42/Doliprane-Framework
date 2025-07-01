@@ -17,3 +17,7 @@ DatabaseManager::init();
 Eloquent::boot();
 $app = new App();
 $app->run();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);

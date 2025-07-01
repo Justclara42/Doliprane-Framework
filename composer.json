@@ -8,6 +8,7 @@
   "require": {
     "vlucas/phpdotenv": "^5.5",
     "illuminate/database": "^12.19",
-    "symfony/console": "^7.3"
+    "symfony/console": "^7.3",
+    "fakerphp/faker": "^1.24"
   }
 }
