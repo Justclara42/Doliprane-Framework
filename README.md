@@ -7,6 +7,8 @@
 ![VanillaJS](https://img.shields.io/badge/JavaScript-Vanilla-yellow?logo=javascript)
 ![Eloquent](https://img.shields.io/badge/ORM-Eloquent-orange)
 ![Router](https://img.shields.io/badge/Router-Custom-lightgrey)
+![Template Engine](https://img.shields.io/badge/Templates-Engine-success)
+![i18n](https://img.shields.io/badge/i18n-Multilang-green)
 
 ---
 
@@ -62,50 +64,65 @@ php -S localhost:8000 -t public
 
 ## 🧩 Composants inclus
 
-| Composant           | Description                                      |
-|---------------------|--------------------------------------------------|
-| ✅ **Routeur**       | Routing type Laravel (`/post/1/slug`)            |
-| ✅ **Controllers**   | Avec injection de paramètres automatiques        |
-| ✅ **Views PHP**     | Templates avec `View::layout()`                  |
-| ✅ **Eloquent ORM**  | Utilise Laravel Eloquent pour les modèles        |
-| ✅ **Tailwind CSS**  | Intégré en local, compilé avec `npm run dev`     |
-| ✅ **Vanilla JS**    | Pas de dépendances JS lourdes                   |
-| ✅ **Menu responsive** | Menu burger en JS natif                        |
-| ✅ **Icônes Lucide** | Icônes SVG intégrés sans CDN                    |
-| ✅ **Docs embarquée**| Documentation dynamique incluse dans `/docs`    |
+| Composant                | Description                                              |
+| ------------------------ | -------------------------------------------------------- |
+| ✅ **Routeur**            | Routing type Laravel (`/post/1/slug`)                    |
+| ✅ **Controllers**        | Avec injection de paramètres automatiques                |
+| ✅ **Views PHP**          | Templates avec `View::layout()`                          |
+| ✅ **Moteur de template** | Fichiers `.dtf` compilés dans `/storage/cache/views/`    |
+| ✅ **Traductions i18n**   | Multi-langues JSON automatiques (`fr_FR`, `en_US`, etc.) |
+| ✅ **Eloquent ORM**       | Utilise Laravel Eloquent pour les modèles                |
+| ✅ **Tailwind CSS**       | Intégré en local, compilé avec `npm run dev`             |
+| ✅ **Vanilla JS**         | Pas de dépendances JS lourdes                            |
+| ✅ **Menu responsive**    | Menu burger en JS natif                                  |
+| ✅ **Icônes Lucide**      | Icônes SVG intégrés sans CDN                             |
+| ✅ **Docs embarquée**     | Documentation dynamique incluse dans `/docs`             |
 
 ---
 
 ## 📁 Arborescence
 
 ```
-📁 app/
- ├── Controllers/
- ├── Core/          ← Routeur, App, Controller, View
- ├── Models/
- └── Views/
-
-📁 config/
- ├── routes.php
- └── env.php
-
-📁 public/
- ├── index.php
- └── assets/        ← CSS + JS compilés
-
-📁 resources/
- ├── css/
- └── js/            ← app.js (menu, docs)
-
-📁 templates/
- ├── laouts/
-        ├── base.php
- └── home.php etc.
-
-.gitignore
-composer.json
-package.json
-README.md
+Doliprane-Framework/
+├── app/
+│   ├── Controllers/
+│   ├── Core/
+│   │   ├── App.php
+│   │   ├── Router.php
+│   │   ├── View.php
+│   │   ├── Lang.php           ← Traduction multilangue
+│   │   ├── TemplateEngine.php ← Moteur de templates .dtf
+│   └── Models/
+│
+├── bootstrap/
+│   └── helpers.php           ← Fonctions globales
+│
+├── config/
+│   ├── env.php
+│   └── routes.php
+│
+├── public/
+│   ├── index.php             ← Point d'entrée unique
+│   └── assets/               ← CSS + JS compilés
+│
+├── resources/
+│   ├── css/
+│   ├── js/
+│   └── lang/                 ← Fichiers JSON de traduction
+│
+├── storage/
+│   └── cache/views/          ← Vues compilées depuis .dtf
+│
+├── templates/
+│   ├── layouts/
+│   │   ├── base.dtf
+│   │   └── ...
+│   └── home.dtf etc.
+│
+├── .env.example
+├── composer.json
+├── package.json
+└── README.md
 ```
 
 ---
@@ -116,13 +133,16 @@ La documentation est intégrée dans le site :
 👉 [http://localhost:8000/docs](http://localhost:8000/docs)
 
 Elle couvre :
-- Introduction au framework
-- Système de routes
-- Contrôleurs
-- Modèles & ORM
-- Vues & Tailwind
-- APIs REST
-- ...et plus à venir
+
+* Introduction au framework
+* Système de routes
+* Contrôleurs
+* Modèles & ORM
+* Vues & Tailwind
+* Template engine
+* Système de traduction i18n
+* APIs REST
+* ...et plus à venir
 
 ---
 
@@ -134,9 +154,9 @@ Elle couvre :
 
 ## 🔗 Liens utiles
 
-- 🌐 Démo locale : http://localhost:8000
-- 📚 Docs TailwindCSS : https://tailwindcss.com/docs
-- 💾 Dépôt GitHub : [Justclara42/Doliprane-Framework](https://github.com/Justclara42/Doliprane-Framework)
+* 🌐 Démo locale : [http://localhost:8000](http://localhost:8000)
+* 📚 Docs TailwindCSS : [https://tailwindcss.com/docs](https://tailwindcss.com/docs)
+* 💾 Dépôt GitHub : [Justclara42/Doliprane-Framework](https://github.com/Justclara42/Doliprane-Framework)
 
 ---
 
