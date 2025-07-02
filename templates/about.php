@@ -1,7 +1,0 @@
-<section class="bg-white p-6 rounded shadow-md">
-    <h2 class="text-2xl font-bold text-[#0074D9] mb-4">À propos</h2>
-<p>
-    Le framework <strong>Doliprane</strong> a été conçu pour être léger, rapide et évolutif.
-    Il est idéal pour apprendre à construire une architecture MVC, gérer les vues, les routes et les composants front.
-</p>
-</section>

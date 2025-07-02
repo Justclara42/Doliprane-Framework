@@ -3,7 +3,7 @@
         <h1 class="text-xl font-bold"><a href="/">💊 Doliprane Framework</a></h1>
 
         <!-- Menu desktop -->
-        <nav class="hidden md:flex gap-6">
+        <nav class="flex md:flex gap-6">
             <a href="/" class="hover:underline">Accueil</a>
             <a href="/about" class="hover:underline">À propos</a>
             <a href="/docs" class="hover:underline">Docs</a>
@@ -12,11 +12,11 @@
             <form method="POST" action="/set-lang" class="inline-block">
                 <label for="lang_sel" class="sr-only"><?= lang("lang_select") ?></label>
                 <select id="lang_sel" name="lang" onchange="this.form.submit()" class="bg-white text-black rounded px-2 py-1 border">
-                    <option value="fr_FR" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '') ?>>🇫🇷 FR</option>
-                    <option value="en_US" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '') ?>>🇬🇧 EN</option>
-                    <option value="de_DE" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'de_DE' ? 'selected' : '') ?>>🇩🇪 DE</option>
-                    <option value="es_ES" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'es_ES' ? 'selected' : '') ?>>🇪🇸 ES</option>
-                    <option value="it_IT" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'it_IT' ? 'selected' : '') ?>>🇮🇹 IT</option>
+                    <option value="fr_FR" <?= ($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '' ?>>🇫🇷 FR</option>
+                    <option value="en_US" <?= ($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '' ?>>🇬🇧 EN</option>
+                    <option value="de_DE" <?= ($_SESSION['lang'] ?? '') === 'de_DE' ? 'selected' : '' ?>>🇩🇪 DE</option>
+                    <option value="es_ES" <?= ($_SESSION['lang'] ?? '') === 'es_ES' ? 'selected' : '' ?>>🇪🇸 ES</option>
+                    <option value="it_IT" <?= ($_SESSION['lang'] ?? '') === 'it_IT' ? 'selected' : '' ?>>🇮🇹 IT</option>
                 </select>
             </form>
         </nav>
@@ -38,11 +38,11 @@
         <form method="POST" action="/set-lang" class="inline-block">
             <label for="lang_sel" class="sr-only"><?= lang("lang_select") ?></label>
             <select id="lang_sel" name="lang" onchange="this.form.submit()" class="bg-white text-black rounded px-2 py-1 border">
-                <option value="fr_FR" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '') ?>>🇫🇷 FR</option>
-                <option value="en_US" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '') ?>>🇬🇧 EN</option>
-                <option value="de_DE" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'de_DE' ? 'selected' : '') ?>>🇩🇪 DE</option>
-                <option value="es_ES" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'es_ES' ? 'selected' : '') ?>>🇪🇸 ES</option>
-                <option value="it_IT" <?= htmlspecialchars(($_SESSION['lang'] ?? '') === 'it_IT' ? 'selected' : '') ?>>🇮🇹 IT</option>
+                <option value="fr_FR" <?= ($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '' ?>>🇫🇷 FR</option>
+                <option value="en_US" <?= ($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '' ?>>🇬🇧 EN</option>
+                <option value="de_DE" <?= ($_SESSION['lang'] ?? '') === 'de_DE' ? 'selected' : '' ?>>🇩🇪 DE</option>
+                <option value="es_ES" <?= ($_SESSION['lang'] ?? '') === 'es_ES' ? 'selected' : '' ?>>🇪🇸 ES</option>
+                <option value="it_IT" <?= ($_SESSION['lang'] ?? '') === 'it_IT' ? 'selected' : '' ?>>🇮🇹 IT</option>
             </select>
         </form>
     </nav>

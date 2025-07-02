@@ -2,9 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>
-    <?= lang("about") ?>
-</title>
+    <title> Erreur <?= $code ?> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
 
@@ -67,14 +65,16 @@
 
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
         
-<section class="bg-white p-6 rounded shadow-md">
-    <h2 class="text-2xl font-bold text-[#0074D9] mb-4"><?= lang("about") ?></h2>
+    <div class="text-center mt-16">
+        <h1 class="text-6xl font-bold text-red-600">Erreur <?= $code ?></h1>
+        <p class="mt-4 text-xl text-gray-700"><?= $message ?></p>
 
-    <p>
-        Le framework <strong>Doliprane</strong> a été conçu pour être léger, rapide et évolutif.
-        Il est idéal pour apprendre à construire une architecture MVC, gérer les vues, les routes et les composants front.
-    </p>
-</section>
+        <?php if ($trace): ?>
+            <pre class="mt-6 p-4 bg-gray-100 text-left text-sm rounded text-gray-800 overflow-x-auto"><?= $trace ?></pre>
+        <?php endif; ?>
+
+        <a href="/" class="mt-6 inline-block text-blue-500 underline">Retour à l'accueil</a>
+    </div>
 
     </main>
 

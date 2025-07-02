@@ -1,0 +1,30 @@
+@extends("layouts.base")
+
+@section("title")
+    Erreur 404 - Page non trouvée
+@endsection
+
+@push("head")
+    <style>
+        .error-404 {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%   { transform: translateY(0); }
+            50%  { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+@endpush
+
+@section("content")
+    <div class="flex flex-col items-center justify-center text-center text-yellow-600 py-20">
+        <h1 class="text-6xl font-extrabold error-404">404</h1>
+        <p class="text-2xl mt-4 font-semibold">La page demandée est introuvable.</p>
+        <p class="mt-2 text-gray-700">Il semble que cette page n'existe pas ou a été déplacée.</p>
+        <a href="/" class="mt-6 inline-block bg-yellow-600 text-white px-6 py-2 rounded hover:bg-yellow-700 transition">
+            Retour à l'accueil
+        </a>
+    </div>
+@endsection

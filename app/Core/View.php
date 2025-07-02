@@ -5,38 +5,50 @@ use App\Core\View\TemplateEngine;
 
 class View
 {
-    private static TemplateEngine $engine;
+    private static ?TemplateEngine $engine = null;
 
-    /**
-     * Initialise le moteur de template + charge la langue
-     */
     public static function init(): void
     {
+        $assetManager = new AssetManager();
+        $assetManager->addCss('tailwind.css');
+        $assetManager->addJs('app.js');
+
         self::$engine = new TemplateEngine();
-        self::$engine->compileAllTemplates(); // 🔁 Compile toutes les vues .dtf automatiquement
+        self::$engine->setGlobal('assetManager', $assetManager);
+        self::$engine->compileAllTemplates();
 
         Lang::setLocale($_SESSION['lang'] ?? 'fr_FR');
     }
 
-    /**
-     * Rend une vue .dtf
-     */
     public static function render(string $view, array $data = []): void
     {
-        echo self::$engine->render($view, $data);
+        if (!self::$engine) {
+            throw new \RuntimeException("Le moteur de templates n'a pas été initialisé.");
+        }
+
+        if (is_dev()) {
+            $data['debug'] = \App\Core\DebugBar::getSummary();
+        }
+
+        $output = self::$engine->render($view, $data);
+
+        if (is_dev()) {
+            $debugBar = self::$engine->render('partials.debugbar', ['debug' => $data['debug']]);
+            $output .= $debugBar;
+        }
+
+        echo $output;
     }
 
-    /**
-     * Définir une variable globale injectée dans toutes les vues
-     */
     public static function setGlobal(string $key, mixed $value): void
     {
+        if (!self::$engine) {
+            throw new \RuntimeException("Le moteur de templates n'a pas été initialisé.");
+        }
+
         self::$engine->setGlobal($key, $value);
     }
 
-    /**
-     * Obsolète depuis l'usage de @extends dans les fichiers .dtf
-     */
     public static function layout(string $layout, string $template, array $data = []): void
     {
         throw new \Exception("View::layout() est obsolète avec les templates .dtf. Utilise View::render('template', [...])");

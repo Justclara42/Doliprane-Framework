@@ -1,8 +1,11 @@
 <?php
 namespace App\Core;
 
+use App\Controllers\ErrorController;
+
 class Router
 {
+    /** @var array<int, array{0: string, 1: string, 2: string}> */
     private array $routes;
 
     public function __construct(string $routeFile)
@@ -10,7 +13,7 @@ class Router
         $this->routes = require $routeFile;
     }
 
-    public function dispatch(string $method, string $uri)
+    public function dispatch(string $method, string $uri): mixed
     {
         $uri = parse_url($uri, PHP_URL_PATH);
         $uri = rtrim($uri, '/') ?: '/';
@@ -19,10 +22,7 @@ class Router
             [$routeMethod, $routePattern, $controllerAction] = $route;
             if ($method !== $routeMethod) continue;
 
-            // Nettoyer aussi le routePattern ici
             $cleanedPattern = rtrim($routePattern, '/') ?: '/';
-
-            // Convertir {param} en regex
             $pattern = preg_replace('#\{([\w]+)\}#', '(?P<\1>[^/]+)', $cleanedPattern);
             $pattern = "#^" . $pattern . "$#";
 
@@ -32,26 +32,31 @@ class Router
             }
         }
 
-        if (!headers_sent()) {
-            http_response_code(404);
-        }
-        echo "404 Not Found";
+        $this->handleError(404, "Page non trouvée.");
+        return null;
     }
 
-    private function invoke(string $controllerAction, array $params)
+    private function invoke(string $controllerAction, array $params): mixed
     {
         [$controllerName, $method] = explode('@', $controllerAction);
-        $controllerClass = "App\\Controllers\\" . $controllerName;
+        $controllerClass = "App\\Controllers\\$controllerName";
 
         if (!class_exists($controllerClass)) {
-            throw new \Exception("Controller $controllerClass not found");
+            $this->handleError(500, "Contrôleur $controllerClass introuvable");
+            return null;
         }
 
         $controller = new $controllerClass;
         if (!method_exists($controller, $method)) {
-            throw new \Exception("Method $method not found in $controllerClass");
+            $this->handleError(500, "Méthode $method absente dans $controllerClass");
+            return null;
         }
 
         return call_user_func_array([$controller, $method], $params);
+    }
+
+    private function handleError(int $code, string $message = ''): void
+    {
+        (new ErrorController())->show($code, $message);
     }
 }

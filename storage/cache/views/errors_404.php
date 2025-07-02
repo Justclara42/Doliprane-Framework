@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-    <?= lang("about") ?>
+    Erreur 404 - Page non trouvée
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
@@ -67,14 +67,14 @@
 
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
         
-<section class="bg-white p-6 rounded shadow-md">
-    <h2 class="text-2xl font-bold text-[#0074D9] mb-4"><?= lang("about") ?></h2>
-
-    <p>
-        Le framework <strong>Doliprane</strong> a été conçu pour être léger, rapide et évolutif.
-        Il est idéal pour apprendre à construire une architecture MVC, gérer les vues, les routes et les composants front.
-    </p>
-</section>
+    <div class="flex flex-col items-center justify-center text-center text-yellow-600 py-20">
+        <h1 class="text-6xl font-extrabold error-404">404</h1>
+        <p class="text-2xl mt-4 font-semibold">La page demandée est introuvable.</p>
+        <p class="mt-2 text-gray-700">Il semble que cette page n'existe pas ou a été déplacée.</p>
+        <a href="/" class="mt-6 inline-block bg-yellow-600 text-white px-6 py-2 rounded hover:bg-yellow-700 transition">
+            Retour à l'accueil
+        </a>
+    </div>
 
     </main>
 

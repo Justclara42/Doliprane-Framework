@@ -3,7 +3,7 @@
         <h1 class="text-xl font-bold"><a href="/">💊 Doliprane Framework</a></h1>
 
         <!-- Menu desktop -->
-        <nav class="hidden md:flex gap-6">
+        <nav class="flex md:flex gap-6">
             <a href="/" class="hover:underline">Accueil</a>
             <a href="/about" class="hover:underline">À propos</a>
             <a href="/docs" class="hover:underline">Docs</a>

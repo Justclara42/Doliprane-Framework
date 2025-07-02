@@ -1,3 +1,12 @@
 <footer class="bg-[#0074D9] text-white text-center py-4 mt-8">
-    &copy; <?= htmlspecialchars(date("Y")) ?> Doliprane Framework — <?= lang("all_rights_reserved") ?>
+    &copy; <?= date("Y") ?> Doliprane Framework — <?= lang("all_rights_reserved") ?>
 </footer>
+<script>
+    // Réouverture automatique après erreur (si erreurs présentes)
+    document.addEventListener('DOMContentLoaded', () => {
+        const hasErrors = <?= htmlspecialchars(count($debug["errors"] ?? []) > 0 ? 'true' : 'false') ?>;
+        if (hasErrors) {
+            document.getElementById('debug-details').classList.remove('hidden');
+        }
+    });
+</script>

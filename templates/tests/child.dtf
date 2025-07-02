@@ -1,0 +1,1 @@
+@extends("tests.layout") @section("body")@push("scripts")<script>test</script>@endpush@endsection

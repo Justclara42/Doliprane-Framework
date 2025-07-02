@@ -1,6 +1,10 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/bootstrap/helpers.php'; // 👈 ajoute ici
+
+define('ROOT', realpath(__DIR__)); // 👈 AJOUTE CECI
+
 use Dotenv\Dotenv;
 use Symfony\Component\Console\Application;
 
@@ -19,6 +23,7 @@ use App\Commands\MigrateCommand;
 use App\Commands\MigrateFreshCommand;
 use App\Commands\MigrateRollbackCommand;
 use App\Commands\MigrateSeedCommand;
+use App\Commands\ViewCacheCommand;
 
 $app = new Application('Doliprane Console');
 
@@ -34,5 +39,6 @@ $app->add(new MigrateCommand());
 $app->add(new MigrateFreshCommand());
 $app->add(new MigrateRollbackCommand());
 $app->add(new MigrateSeedCommand());
+$app->add(new ViewCacheCommand());
 
 $app->run();
