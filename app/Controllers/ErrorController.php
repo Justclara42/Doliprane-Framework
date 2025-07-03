@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Core\View;
-use App\Core\DebugBar;
 
 class ErrorController
 {
@@ -27,11 +26,6 @@ class ErrorController
             'trace' => is_dev() ? $trace : '',
             'devMode' => is_dev(),
         ];
-
-        // Ajout de debugbar même en cas d'erreur
-        if (is_dev()) {
-            $data['debug'] = DebugBar::getSummary();
-        }
 
         View::render(
             file_exists(ROOT . "/resources/views/errors/$code.dtf") ? "errors.$code" : "errors.error",

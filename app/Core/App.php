@@ -5,6 +5,7 @@ namespace App\Core;
 use App\Core\Lang;
 use App\Core\Router;
 use App\Controllers\ErrorController;
+use App\Core\View;
 
 class App
 {
@@ -14,6 +15,7 @@ class App
     {
         // Initialisation du router
         $this->router = new Router(ROOT . '/config/routes.php');
+
     }
 
     public function run(): void

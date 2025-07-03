@@ -4,9 +4,9 @@
 
         <!-- Menu desktop -->
         <nav class="flex md:flex gap-6">
-            <a href="/" class="hover:underline">Accueil</a>
-            <a href="/about" class="hover:underline">À propos</a>
-            <a href="/docs" class="hover:underline">Docs</a>
+            <a href="/" class="hover:underline"><?= lang("home") ?></a>
+            <a href="/about" class="hover:underline"><?= lang("about") ?></a>
+            <a href="/docs" class="hover:underline"><?= lang("docs") ?></a>
             <a href="https://github.com/Justclara42/Doliprane-Framework" class="hover:underline" target="_blank">GitHub</a>
 
             <form method="POST" action="/set-lang" class="inline-block">
@@ -31,9 +31,9 @@
 
     <!-- Menu mobile -->
     <nav id="mobile-nav" class="hidden flex-col gap-2 px-4 pt-2 md:hidden">
-        <a href="/" class="block hover:underline">Accueil</a>
-        <a href="/about" class="block hover:underline">À propos</a>
-        <a href="/docs" class="block hover:underline">Docs</a>
+        <a href="/" class="block hover:underline"><?= lang("home") ?></a>
+        <a href="/about" class="block hover:underline"><?= lang("about") ?></a>
+        <a href="/docs" class="block hover:underline"><?= lang("docs") ?></a>
         <a href="https://github.com/Justclara42/Doliprane-Framework" target="_blank" class="block hover:underline">GitHub</a>
         <form method="POST" action="/set-lang" class="inline-block">
             <label for="lang_sel" class="sr-only"><?= lang("lang_select") ?></label>

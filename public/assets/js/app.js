@@ -437,3 +437,18 @@ DB_PASS=</code></pre>
         });
     });
 });
+
+function toggleDebugBar() {
+    const bar = document.getElementById('debugbar');
+    const icon = document.getElementById('debugbar-toggle-icon');
+
+    if (bar.classList.contains('collapsed')) {
+        bar.classList.remove('collapsed');
+        icon.setAttribute('data-lucide', 'chevron-down');
+    } else {
+        bar.classList.add('collapsed');
+        icon.setAttribute('data-lucide', 'chevron-up');
+    }
+
+    lucide.createIcons();
+}

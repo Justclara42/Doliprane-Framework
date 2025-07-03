@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 
 use App\Core\View\TemplateEngine;
@@ -6,6 +7,11 @@ use App\Core\View\TemplateEngine;
 class View
 {
     private static ?TemplateEngine $engine = null;
+
+    /**
+     * Variables partagées globalement avec toutes les vues.
+     */
+    protected static array $shared = [];
 
     public static function init(): void
     {
@@ -26,17 +32,10 @@ class View
             throw new \RuntimeException("Le moteur de templates n'a pas été initialisé.");
         }
 
-        if (is_dev()) {
-            $data['debug'] = \App\Core\DebugBar::getSummary();
-        }
+        // Fusionne les données avec les variables partagées
+        $mergedData = array_merge(self::$shared, $data);
 
-        $output = self::$engine->render($view, $data);
-
-        if (is_dev()) {
-            $debugBar = self::$engine->render('partials.debugbar', ['debug' => $data['debug']]);
-            $output .= $debugBar;
-        }
-
+        $output = self::$engine->render($view, $mergedData);
         echo $output;
     }
 
@@ -47,6 +46,11 @@ class View
         }
 
         self::$engine->setGlobal($key, $value);
+    }
+
+    public static function share(string $key, mixed $value): void
+    {
+        self::$shared[$key] = $value;
     }
 
     public static function layout(string $layout, string $template, array $data = []): void

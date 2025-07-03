@@ -1,4 +1,5 @@
 <?php
+
 define('ROOT', dirname(__DIR__));
 
 require_once ROOT . '/bootstrap/helpers.php';
@@ -10,22 +11,17 @@ use App\Core\View;
 use App\Core\Lang;
 use App\Core\Eloquent;
 use App\Core\DatabaseManager;
-use App\Core\DebugBar;
 use App\Controllers\ErrorController;
+use App\Debug\DebugManager;
 
 session_start();
-// 🧪 Boot DebugBar (enregistre début du script)
-if (is_dev()) {
-    DebugBar::boot();
-}
 
-// 🌍 Langue sélectionnée
+// Langue
 if (isset($_GET['lang'])) {
     $_SESSION['lang'] = $_GET['lang'];
 }
 
-
-// 🧠 Gestion erreurs & exceptions
+// Gestion des erreurs
 if (is_dev()) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -35,9 +31,13 @@ if (is_dev()) {
     error_reporting(0);
 }
 
-// ⚠️ Initialiser View avant toute erreur potentielle
+// Initialisations
+Lang::setLocale($_SESSION['lang'] ?? 'fr_FR');
+DatabaseManager::init();
+Eloquent::boot();
 View::init();
 
+// Handlers
 set_exception_handler(function ($e) {
     $GLOBALS['last_exception'] = $e;
     if (is_dev()) {
@@ -64,11 +64,18 @@ register_shutdown_function(function () {
     }
 });
 
-// 🚀 Initialisation des autres services
-Lang::setLocale($_SESSION['lang'] ?? 'fr_FR');
-DatabaseManager::init();
-Eloquent::boot();
-
-// 🎬 Lancer l'application
+// Exécute l'application (déclenche les routes et les contrôleurs)
+// ✅ Important : ici on remplit $_REQUEST['__controller_called'] dans Router
 $app = new App();
 $app->run();
+
+// Collecte les données de debug après que la réponse ait été envoyée
+$debug = new DebugManager();
+$debug->collectAll();
+$debugData = $debug->getCollectedData();
+
+// Affiche la DebugBar si en développement
+if (is_dev()) {
+    extract($debugData); // rend $time, $memory, $php, $route, etc. disponibles
+    include ROOT . '/templates/components/debugbar.php';
+}

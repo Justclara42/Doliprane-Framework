@@ -52,6 +52,8 @@ class Router
             return null;
         }
 
+        $_REQUEST['__controller_called'] = $controllerClass . '::' . $method;
+
         return call_user_func_array([$controller, $method], $params);
     }
 

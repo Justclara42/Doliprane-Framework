@@ -24,6 +24,7 @@ use App\Commands\MigrateFreshCommand;
 use App\Commands\MigrateRollbackCommand;
 use App\Commands\MigrateSeedCommand;
 use App\Commands\ViewCacheCommand;
+use App\Commands\MakeComponentCommand;
 
 $app = new Application('Doliprane Console');
 
@@ -40,5 +41,6 @@ $app->add(new MigrateFreshCommand());
 $app->add(new MigrateRollbackCommand());
 $app->add(new MigrateSeedCommand());
 $app->add(new ViewCacheCommand());
+$app->add(new MakeComponentCommand());
 
 $app->run();

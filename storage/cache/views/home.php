@@ -14,15 +14,16 @@
     
 </head>
 <body class="bg-[#FFE600] text-gray-900 min-h-screen flex flex-col font-sans">
-    <header class="bg-[#0074D9] text-white px-4 py-4 shadow-md">
+
+<header class="bg-[#0074D9] text-white px-4 py-4 shadow-md">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
         <h1 class="text-xl font-bold"><a href="/">💊 Doliprane Framework</a></h1>
 
         <!-- Menu desktop -->
         <nav class="flex md:flex gap-6">
-            <a href="/" class="hover:underline">Accueil</a>
-            <a href="/about" class="hover:underline">À propos</a>
-            <a href="/docs" class="hover:underline">Docs</a>
+            <a href="/" class="hover:underline"><?= lang("home") ?></a>
+            <a href="/about" class="hover:underline"><?= lang("about") ?></a>
+            <a href="/docs" class="hover:underline"><?= lang("docs") ?></a>
             <a href="https://github.com/Justclara42/Doliprane-Framework" class="hover:underline" target="_blank">GitHub</a>
 
             <form method="POST" action="/set-lang" class="inline-block">
@@ -47,9 +48,9 @@
 
     <!-- Menu mobile -->
     <nav id="mobile-nav" class="hidden flex-col gap-2 px-4 pt-2 md:hidden">
-        <a href="/" class="block hover:underline">Accueil</a>
-        <a href="/about" class="block hover:underline">À propos</a>
-        <a href="/docs" class="block hover:underline">Docs</a>
+        <a href="/" class="block hover:underline"><?= lang("home") ?></a>
+        <a href="/about" class="block hover:underline"><?= lang("about") ?></a>
+        <a href="/docs" class="block hover:underline"><?= lang("docs") ?></a>
         <a href="https://github.com/Justclara42/Doliprane-Framework" target="_blank" class="block hover:underline">GitHub</a>
         <form method="POST" action="/set-lang" class="inline-block">
             <label for="lang_sel" class="sr-only"><?= lang("lang_select") ?></label>
@@ -65,8 +66,8 @@
 </header>
 
 
-    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
-        
+<main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
+    
 <section class="bg-white p-6 rounded shadow-md">
     <h2 class="text-2xl font-bold text-[#0074D9] mb-4"><?= lang("welcome") ?></h2>
 
@@ -90,9 +91,9 @@
     </p>
 </section>
 
-    </main>
+</main>
 
-    <footer class="bg-[#0074D9] text-white text-center py-4 mt-8">
+<footer class="bg-[#0074D9] text-white text-center py-4 mt-8">
     &copy; <?= date("Y") ?> Doliprane Framework — <?= lang("all_rights_reserved") ?>
 </footer>
 <script>
@@ -106,6 +107,16 @@
 </script>
 
 
-    
+
+
+<!-- Include not found: components/debugbar -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+</script>
+
 </body>
 </html>

@@ -12,14 +12,25 @@
     @stack("head")
 </head>
 <body class="bg-[#FFE600] text-gray-900 min-h-screen flex flex-col font-sans">
-    {% include "layouts/partials/header" %}
 
-    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
-        @yield("content")
-    </main>
+{% include "layouts/partials/header" %}
 
-    {% include "layouts/partials/footer" %}
+<main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
+    @yield("content")
+</main>
 
-    @stack("scripts")
+{% include "layouts/partials/footer" %}
+
+@stack("scripts")
+
+{% include "components/debugbar" %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+</script>
+
 </body>
 </html>

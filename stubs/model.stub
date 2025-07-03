@@ -4,9 +4,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\TracksModelUsage;
 
 class {{ className }} extends Model
 {
+    use TracksModelUsage;
+
     protected $table = '{{ tableName }}';
 
     protected $fillable = [

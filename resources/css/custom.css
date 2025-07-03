@@ -8,10 +8,8 @@
     z-index: 50;
 }
 
-#sidebar[data-expanded="false"] .tooltip {
-    display: block !important;
-}
-
-#sidebar[data-expanded="true"] .tooltip {
-    display: none !important;
+#debugbar.collapsed {
+    height: 0;
+    overflow: hidden;
+    padding: 0;
 }

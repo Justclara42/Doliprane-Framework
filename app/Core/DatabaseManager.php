@@ -4,6 +4,8 @@ namespace App\Core;
 
 class DatabaseManager
 {
+    private static array $queries = [];
+
     public static function getConfig(): array
     {
         $driver = $_ENV['DB_CONNECTION'] ?? 'sqlite';
@@ -54,5 +56,19 @@ class DatabaseManager
     public static function init(): void
     {
         // RAS ici pour l'instant
+    }
+
+    public static function logQuery(string $query, float $duration, array $bindings = []): void
+    {
+        self::$queries[] = [
+            'query'    => $query,
+            'bindings' => $bindings,
+            'duration' => $duration
+        ];
+    }
+
+    public static function getLoggedQueries(): array
+    {
+        return self::$queries;
     }
 }

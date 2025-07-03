@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\View;
+use App\Models\Page;
 
 class PageController extends Controller {
     public function about() {
