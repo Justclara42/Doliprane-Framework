@@ -2,45 +2,50 @@
 
 namespace App\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MakeRepositoryCommand extends Command
+#[AsCommand(
+    name: 'make:repository',
+    description: 'Crée un pattern Repository pour accéder aux modèles.'
+)]
+class MakeRepositoryCommand extends BaseCommand
 {
-    /**
-     * Configure the command options and arguments.
-     */
     protected function configure(): void
     {
-        $this
-            ->setName('make:repository')
-            ->setDescription('Crée un repository dans app/Repositories.')
-            ->addArgument('name', InputArgument::REQUIRED, 'Nom du repository (ex: PostRepository)');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Nom du repository (ex: PostRepository)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $className = $input->getArgument('name');
+        $io = new SymfonyStyle($input, $output);
 
-        $stubPath = __DIR__ . '/../../stubs/Repository.stub';
-        $targetPath = 'app/Repositories/' . $className . '.php';
+        $repositoryName = $input->getArgument('name');
+        $targetPath = ROOT . '/app/Repositories/' . $repositoryName . '.php';
+        $stubPath = ROOT . '/stubs/Repository.stub';
+
+        $this->ensureDirectory(dirname($targetPath), $io, true);
 
         if (!file_exists($stubPath)) {
-            $output->writeln('<error>Stub de repository manquant.</error>');
-            return Command::FAILURE;
+            $io->error('Stub de repository manquant.');
+            return BaseCommand::FAILURE;
         }
 
         if (file_exists($targetPath)) {
-            $output->writeln('<comment>Repository déjà existant.</comment>');
-        } else {
-            $stub = file_get_contents($stubPath);
-            $stub = str_replace('{{ className }}', $className, $stub);
-            file_put_contents($targetPath, $stub);
-            $output->writeln("<info>Repository créé : $targetPath</info>");
+            $io->warning("Repository déjà existant : $targetPath");
+            return BaseCommand::SUCCESS;
         }
 
-        return Command::SUCCESS;
+        $stub = file_get_contents($stubPath);
+        $content = str_replace('{{ repositoryName }}', $repositoryName, $stub);
+
+        file_put_contents($targetPath, $content);
+        $io->success("Repository créé : $targetPath");
+
+        return BaseCommand::SUCCESS;
     }
 }

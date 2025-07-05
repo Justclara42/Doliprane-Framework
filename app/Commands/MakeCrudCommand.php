@@ -2,79 +2,59 @@
 
 namespace App\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MakeCrudCommand extends Command
+#[AsCommand(
+    name: 'make:crud',
+    description: 'Génère le squelette complet d\'un CRUD (Controller, Model, Vue).'
+)]
+class MakeCrudCommand extends BaseCommand
 {
-    /**
-     * Configure the command options and arguments.
-     */
     protected function configure(): void
     {
-        $this
-            ->setName('make:crud')
-            ->setDescription('Génère un CRUD complet (controller, model, repository, vues)')
-            ->addArgument('name', InputArgument::REQUIRED, 'Nom de la ressource (ex: User)');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Nom de la ressource (ex: Post)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $name = ucfirst($input->getArgument('name'));
-        $viewFolder = strtolower($name) . 's';
-        $tableName = $viewFolder;
+        $io = new SymfonyStyle($input, $output);
 
-        // Controller
-        $this->generateFile("CrudController.stub", "app/Controllers/{$name}Controller.php", [
-            '{{ modelName }}' => $name,
-            '{{ viewFolder }}' => $viewFolder
-        ]);
+        $resourceName = ucfirst($input->getArgument('name'));
 
-        // Model
-        $this->generateFile("CrudModel.stub", "app/Models/{$name}.php", [
-            '{{ modelName }}' => $name,
-            '{{ tableName }}' => $tableName
-        ]);
+        // Génération des composants
+        $io->section("Génération du CRUD pour : $resourceName");
 
-        // Repository
-        $this->generateFile("CrudRepository.stub", "app/Repositories/{$name}Repository.php", [
-            '{{ modelName }}' => $name
-        ]);
+        $this->generateComponent("make:model", $resourceName, $io);
+        $this->generateComponent("make:controller", $resourceName, $io);
+        $this->generateComponent("make:view", strtolower($resourceName) . '/index', $io);
 
-        // Views
-        $views = [
-            'index' => 'CrudView.stub',
-            'show' => 'CrudView.stub',
-            'create' => 'CrudForm.stub',
-            'edit' => 'CrudFormEdit.stub'
-        ];
-
-        $viewDir = __DIR__ . "/../../templates/{$viewFolder}";
-        if (!is_dir($viewDir)) mkdir($viewDir, 0777, true);
-
-        foreach ($views as $viewName => $stubFile) {
-            $this->generateFile($stubFile, "templates/{$viewFolder}/{$viewName}.php", [
-                '{{ viewName }}' => "{$viewFolder}/{$viewName}",
-                '{{ modelName }}' => $name,
-                '{{ routePrefix }}' => $viewFolder
-            ]);
-        }
-
-        $output->writeln("<info>CRUD complet pour $name généré avec succès !</info>");
-        return Command::SUCCESS;
+        $io->success("Le CRUD complet pour $resourceName a été généré avec succès !");
+        return BaseCommand::SUCCESS;
     }
 
-    private function generateFile(string $stubName, string $targetPath, array $replacements): void
+    private function generateComponent(string $command, string $name, SymfonyStyle $io): void
     {
-        $stubPath = __DIR__ . "/../../stubs/{$stubName}";
-        $content = file_get_contents($stubPath);
-
-        foreach ($replacements as $key => $val) {
-            $content = str_replace($key, $val, $content);
+        $io->text("Exécution de la commande : $command pour $name...");
+        // Attention : cette méthode utilise des sous-commandes en interne.
+        $application = $this->getApplication();
+        if (!$application) {
+            $io->error("Impossible d'obtenir l'application Symfony Console.");
+            return;
         }
 
-        file_put_contents(__DIR__ . '/../../' . $targetPath, $content);
+        $input = new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => $command,
+            'name'    => $name,
+        ]);
+
+        $result = $application->doRun($input, $io);
+        if ($result !== BaseCommand::SUCCESS) {
+            $io->warning("Une erreur s'est produite lors de l'exécution de $command pour $name.");
+        }
     }
 }

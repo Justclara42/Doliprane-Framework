@@ -16,7 +16,11 @@ class AssetManager
     public function __construct()
     {
         $this->publicRoot = $_SERVER['DOCUMENT_ROOT'];
-        $this->compileTailwindIfNeeded();
+
+        // Compile Tailwind uniquement en environnement de développement
+        if (is_dev()) {
+            $this->compileTailwindIfNeeded();
+        }
     }
 
     // CSS
@@ -61,7 +65,7 @@ class AssetManager
     }
 
     // Compile Tailwind si nécessaire
-    private function compileTailwindIfNeeded(): void
+    public function compileTailwindIfNeeded(): void
     {
         $input = ROOT . $this->tailwindInput;
         $output = ROOT . $this->tailwindOutput;

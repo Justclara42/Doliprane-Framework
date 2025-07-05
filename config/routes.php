@@ -1,8 +1,4 @@
 <?php
-use App\Controllers\HomeController;
-use App\Controllers\PageController;
-use App\Controllers\UserController;
-use App\Controllers\LangController;
 
 return [
     // Pages web classiques

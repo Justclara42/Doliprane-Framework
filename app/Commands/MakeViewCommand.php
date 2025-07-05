@@ -2,45 +2,47 @@
 
 namespace App\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MakeViewCommand extends Command
+#[AsCommand(
+    name: 'make:view',
+    description: 'Génère un fichier de vue dans templates/.'
+)]
+class MakeViewCommand extends BaseCommand
 {
-    /**
-     * Configure the command options and arguments.
-     */
     protected function configure(): void
     {
         $this
-            ->setName('make:view')
-            ->setDescription('Génère un fichier de vue dans templates/')
             ->addArgument('name', InputArgument::REQUIRED, 'Nom de la vue (ex: users/index)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $name = $input->getArgument('name');
-        $path = __DIR__ . '/../../templates/' . $name . '.php';
+        $path = ROOT . '/templates/' . $name . '.php';
         $dir = dirname($path);
 
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
+        // Vérification ou création du répertoire
+        $this->ensureDirectory($dir, $io, true);
 
         if (file_exists($path)) {
-            $output->writeln("<comment>La vue existe déjà : templates/$name.php</comment>");
-            return Command::SUCCESS;
+            $io->warning("La vue existe déjà : templates/$name.php");
+            return BaseCommand::SUCCESS;
         }
 
-        $stub = file_get_contents(__DIR__ . '/../../stubs/View.stub');
+        $stub = file_get_contents(ROOT . '/stubs/View.stub');
         $content = str_replace('{{ viewName }}', $name, $stub);
 
         file_put_contents($path, $content);
-        $output->writeln("<info>Vue créée : templates/$name.php</info>");
+        $io->success("Vue créée : templates/$name.php");
 
-        return Command::SUCCESS;
+        return BaseCommand::SUCCESS;
     }
 }

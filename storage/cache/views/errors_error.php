@@ -37,6 +37,14 @@
 </head>
 <body class="bg-[#FFE600] text-gray-900 min-h-screen flex flex-col font-sans">
 
+<?php
+
+$controller = new \App\Controllers\LangController();
+$supportedLocales = $controller->getSupportedLocales();
+
+
+
+?>
 <header class="bg-[#0074D9] text-white px-4 py-4 shadow-md">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
         <h1 class="text-xl font-bold"><a href="/">💊 Doliprane Framework</a></h1>
@@ -51,11 +59,12 @@
             <form method="POST" action="/set-lang" class="inline-block">
                 <label for="lang_sel" class="sr-only"><?= lang("lang_select") ?></label>
                 <select id="lang_sel" name="lang" onchange="this.form.submit()" class="bg-white text-black rounded px-2 py-1 border">
-                    <option value="fr_FR" <?= ($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '' ?>>🇫🇷 FR</option>
-                    <option value="en_US" <?= ($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '' ?>>🇬🇧 EN</option>
-                    <option value="de_DE" <?= ($_SESSION['lang'] ?? '') === 'de_DE' ? 'selected' : '' ?>>🇩🇪 DE</option>
-                    <option value="es_ES" <?= ($_SESSION['lang'] ?? '') === 'es_ES' ? 'selected' : '' ?>>🇪🇸 ES</option>
-                    <option value="it_IT" <?= ($_SESSION['lang'] ?? '') === 'it_IT' ? 'selected' : '' ?>>🇮🇹 IT</option>
+                    <?php foreach ($supportedLocales as $locale): ?>
+                        <option value="<?= htmlspecialchars($locale) ?>"
+                            <?= (isset($_SESSION['lang']) && $_SESSION['lang'] === $locale) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars(substr($locale, -2)) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </form>
         </nav>
@@ -77,11 +86,12 @@
         <form method="POST" action="/set-lang" class="inline-block">
             <label for="lang_sel" class="sr-only"><?= lang("lang_select") ?></label>
             <select id="lang_sel" name="lang" onchange="this.form.submit()" class="bg-white text-black rounded px-2 py-1 border">
-                <option value="fr_FR" <?= ($_SESSION['lang'] ?? '') === 'fr_FR' ? 'selected' : '' ?>>🇫🇷 FR</option>
-                <option value="en_US" <?= ($_SESSION['lang'] ?? '') === 'en_US' ? 'selected' : '' ?>>🇬🇧 EN</option>
-                <option value="de_DE" <?= ($_SESSION['lang'] ?? '') === 'de_DE' ? 'selected' : '' ?>>🇩🇪 DE</option>
-                <option value="es_ES" <?= ($_SESSION['lang'] ?? '') === 'es_ES' ? 'selected' : '' ?>>🇪🇸 ES</option>
-                <option value="it_IT" <?= ($_SESSION['lang'] ?? '') === 'it_IT' ? 'selected' : '' ?>>🇮🇹 IT</option>
+                <?php foreach ($supportedLocales as $locale): ?>
+                    <option value="<?= htmlspecialchars($locale) ?>"
+                        <?= (isset($_SESSION['lang']) && $_SESSION['lang'] === $locale) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars(substr($locale, -2)) ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
         </form>
     </nav>
@@ -90,16 +100,16 @@
 
 <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFE600]/30">
     
-    <div class="text-center mt-16">
-        <h1 class="text-6xl font-bold text-red-600">Erreur <?= $code ?></h1>
-        <p class="mt-4 text-xl text-gray-700"><?= $message ?></p>
+<div class="text-center mt-16">
+    <h1 class="text-6xl font-bold text-red-600">Erreur <?= $code ?></h1>
+    <p class="mt-4 text-xl text-gray-700"><?= $message ?></p>
 
-        <?php if ($trace): ?>
-            <pre class="mt-6 p-4 bg-gray-100 text-left text-sm rounded text-gray-800 overflow-x-auto"><?= $trace ?></pre>
-        <?php endif; ?>
+    <?php if ($trace): ?>
+    <pre class="mt-6 p-4 bg-gray-100 text-left text-sm rounded text-gray-800 overflow-x-auto"><?= $trace ?></pre>
+    <?php endif; ?>
 
-        <a href="/" class="mt-6 inline-block text-blue-500 underline">Retour à l'accueil</a>
-    </div>
+    <a href="/" class="mt-6 inline-block text-blue-500 underline">Retour à l'accueil</a>
+</div>
 
 </main>
 
@@ -118,8 +128,8 @@
 
 
 
+<?php if (isset($debugbar)) echo $debugbar; ?>
 
-<!-- Include not found: components/debugbar -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         if (window.lucide) {

@@ -2,10 +2,9 @@
 
 namespace App\Core;
 
-use App\Core\Lang;
 use App\Core\Router;
 use App\Controllers\ErrorController;
-use App\Core\View;
+use App\Debug\ErrorLogger;
 
 class App
 {
@@ -13,33 +12,42 @@ class App
 
     public function __construct()
     {
-        // Initialisation du router
         $this->router = new Router(ROOT . '/config/routes.php');
-
     }
 
-    public function run(): void
+    public function run(): string
     {
         try {
-            ob_start(); // Pour éviter les erreurs d'en-têtes
+            ob_start();
             $this->router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-            ob_end_flush();
+            return ob_get_clean();
         } catch (\Throwable $e) {
-            ob_end_clean(); // Nettoie le buffer s’il y a une exception
-            $this->handleException($e);
+            ob_end_clean();
+            return $this->handleException($e);
         }
     }
 
-    protected function handleException(\Throwable $e): void
+    protected function handleException(\Throwable $e): string
     {
-        if (env('APP_ENV') === 'dev') {
-            http_response_code(500);
-            echo "<h1>Erreur</h1>";
-            echo "<p><strong>Message :</strong> {$e->getMessage()}</p>";
-            echo "<pre>{$e->getTraceAsString()}</pre>";
-        } else {
-            http_response_code(500);
-            (new ErrorController())->show(500);
-        }
+        http_response_code(500);
+
+        // 👇 Ajout manuel du log de l'erreur ici
+        ErrorLogger::logError(
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
+
+        ob_start();
+        (new ErrorController())->show(500, $e->getMessage(), $e->getTraceAsString());
+        return ob_get_clean();
     }
+
+//    protected function handleException(\Throwable $e): string
+//    {
+//        http_response_code(500);
+//        ob_start();
+//        (new ErrorController())->show(500, $e->getMessage(), $e->getTraceAsString());
+//        return ob_get_clean();
+//    }
 }

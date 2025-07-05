@@ -2,50 +2,54 @@
 
 namespace App\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MakeModelCommand extends Command
+#[AsCommand(
+    name: 'make:model',
+    description: 'Crée un modèle Eloquent dans app/Models.'
+)]
+class MakeModelCommand extends BaseCommand
 {
-    /**
-     * Configure the command options and arguments.
-     */
     protected function configure(): void
     {
-        $this
-            ->setName('make:model')
-            ->setDescription('Crée un modèle Eloquent dans app/Models.')
-            ->addArgument('name', InputArgument::REQUIRED, 'Nom du modèle (ex: Post)');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Nom du modèle (ex: Post)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $className = $input->getArgument('name');
         $tableName = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $className)) . 's';
 
-        $stubPath = __DIR__ . '/../../stubs/Model.stub';
-        $targetPath = 'app/Models/' . $className . '.php';
+        $stubPath = ROOT . '/stubs/Model.stub';
+        $targetPath = ROOT . '/app/Models/' . $className . '.php';
 
         if (!file_exists($stubPath)) {
-            $output->writeln('<error>Stub de modèle manquant.</error>');
-            return Command::FAILURE;
+            $io->error('Stub de modèle manquant.');
+            return BaseCommand::FAILURE;
         }
 
         if (file_exists($targetPath)) {
-            $output->writeln('<comment>Modèle déjà existant.</comment>');
-        } else {
-            $stub = file_get_contents($stubPath);
-            $stub = str_replace(
-                ['{{ className }}', '{{ tableName }}'],
-                [$className, $tableName],
-                $stub
-            );
-            file_put_contents($targetPath, $stub);
-            $output->writeln("<info>Modèle créé : $targetPath</info>");
+            $io->warning("Modèle déjà existant : $targetPath");
+            return BaseCommand::SUCCESS;
         }
 
-        return Command::SUCCESS;
+        $stub = file_get_contents($stubPath);
+        $content = str_replace(
+            ['{{ className }}', '{{ tableName }}'],
+            [$className, $tableName],
+            $stub
+        );
+
+        file_put_contents($targetPath, $content);
+        $io->success("Modèle créé : $targetPath");
+
+        return BaseCommand::SUCCESS;
     }
 }

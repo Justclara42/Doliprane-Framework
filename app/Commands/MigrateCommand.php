@@ -2,13 +2,14 @@
 
 namespace App\Commands;
 
+use App\Commands\Base\BaseCommand;
 use App\Core\DatabaseManager;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateCommand extends Command
+class MigrateCommand extends BaseCommand
 {
     protected function configure(): void
     {
@@ -27,7 +28,7 @@ class MigrateCommand extends Command
 
         if (empty($migrationFiles)) {
             $output->writeln("<comment>⚠️ Aucune migration trouvée dans $migrationsDir</comment>");
-            return Command::SUCCESS;
+            return BaseCommand::SUCCESS;
         }
 
         foreach ($migrationFiles as $file) {
@@ -49,7 +50,7 @@ class MigrateCommand extends Command
             }
         }
 
-        return Command::SUCCESS;
+        return BaseCommand::SUCCESS;
     }
 
     /**

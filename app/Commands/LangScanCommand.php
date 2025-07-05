@@ -1,34 +1,34 @@
 <?php
+
 namespace App\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class LangScanCommand extends Command
+#[AsCommand(
+    name: 'lang:scan',
+    description: 'Scanne les templates pour les balises {% ... %} utilisées pour les traductions.'
+)]
+class LangScanCommand extends BaseCommand
 {
-    protected function configure(): void
-    {
-        $this
-            ->setName('lang:scan') // ✅ Nom de la commande défini explicitement
-            ->setDescription('Scanne les templates pour les balises {% ... %} utilisées pour les traductions.');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $directory = __DIR__ . '/../../templates';
+        $io = new SymfonyStyle($input, $output);
+        $directory = ROOT . '/templates';
         $matches = [];
 
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory)
-        );
+        // Vérifie si le répertoire existe
+        $this->ensureDirectory($directory, $io);
+
+        $files = $this->getPhpFiles($directory);
 
         foreach ($files as $file) {
-            if ($file->isFile() && $file->getExtension() === 'php') {
-                $content = file_get_contents($file->getPathname());
-                if (preg_match_all('/\{\%\s*(.*?)\s*\%\}/', $content, $found)) {
-                    $matches = array_merge($matches, $found[1]);
-                }
+            $content = file_get_contents($file);
+            if (preg_match_all('/\\{\\%\\s*(.*?)\\s*\\%\\}/', $content, $found)) {
+                $matches = array_merge($matches, $found[1]);
             }
         }
 
@@ -36,14 +36,31 @@ class LangScanCommand extends Command
         sort($unique);
 
         if (empty($unique)) {
-            $output->writeln("<comment>Aucune balise de traduction trouvée dans les templates.</comment>");
+            $io->warning("Aucune balise de traduction trouvée dans les templates.");
         } else {
-            $output->writeln("<info>Clés de traduction détectées :</info>");
+            $io->success("Clés de traduction détectées :");
             foreach ($unique as $str) {
-                $output->writeln(" - {$str}");
+                $io->listing([$str]);
             }
         }
 
-        return Command::SUCCESS;
+        return BaseCommand::SUCCESS;
+    }
+
+    /**
+     * Retourne tous les fichiers PHP d'un répertoire.
+     *
+     * @param string $directory
+     * @return array
+     */
+    private function getPhpFiles(string $directory): array
+    {
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory)
+        );
+
+        return array_filter(iterator_to_array($files), function ($file) {
+            return $file->isFile() && $file->getExtension() === 'php';
+        });
     }
 }

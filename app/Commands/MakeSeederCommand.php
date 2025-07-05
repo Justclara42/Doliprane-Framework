@@ -10,14 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'make:migration',
-    description: 'Crée un fichier de migration dans /database/migrations.'
+    name: 'make:seeder',
+    description: 'Crée un fichier seeder dans /database/seeders.'
 )]
-class MakeMigrationCommand extends BaseCommand
+class MakeSeederCommand extends BaseCommand
 {
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED, 'Nom de la migration (ex: create_users_table)');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Nom du seeder (ex: UsersTableSeeder)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -25,29 +25,27 @@ class MakeMigrationCommand extends BaseCommand
         $io = new SymfonyStyle($input, $output);
 
         $name = $input->getArgument('name');
-        $datePrefix = date('Y_m_d_His');
-        $fileName = "{$datePrefix}_{$name}.php";
-        $filePath = ROOT . "/database/migrations/{$fileName}";
+        $filePath = ROOT . "/database/seeders/{$name}.php";
 
         $this->ensureDirectory(dirname($filePath), $io, true);
 
         if (file_exists($filePath)) {
-            $io->warning("Le fichier de migration existe déjà : $filePath");
+            $io->warning("Le fichier seeder existe déjà : $filePath");
             return BaseCommand::SUCCESS;
         }
 
-        $stubPath = ROOT . '/stubs/Migration.stub';
+        $stubPath = ROOT . '/stubs/Seeder.stub';
 
         if (!file_exists($stubPath)) {
-            $io->error("Le stub de migration est introuvable.");
+            $io->error("Le stub de seeder est introuvable.");
             return BaseCommand::FAILURE;
         }
 
         $stub = file_get_contents($stubPath);
-        $stub = str_replace('{{ className }}', ucfirst($name), $stub);
+        $stub = str_replace('{{ className }}', $name, $stub);
 
         file_put_contents($filePath, $stub);
-        $io->success("Migration créée : $filePath");
+        $io->success("Seeder créé : $filePath");
 
         return BaseCommand::SUCCESS;
     }

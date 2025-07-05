@@ -1,34 +1,46 @@
 <?php
+
 namespace App\Commands;
 
-use App\Core\DatabaseManager;
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MigrateSeedCommand extends Command
+#[AsCommand(
+    name: 'migrate:seed',
+    description: 'Remplit la base de données avec des données factices via des seeders.'
+)]
+class MigrateSeedCommand extends BaseCommand
 {
-    protected function configure(): void
-    {
-        $this
-            ->setName('migrate:seed')
-            ->setDescription('Insère des données de test à partir des seeders');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        DatabaseManager::init();
+        $io = new SymfonyStyle($input, $output);
 
-        $seedersDir = __DIR__ . '/../../database/seeders';
+        $seederDir = ROOT . '/database/seeders';
+        $this->ensureDirectory($seederDir, $io);
 
-        foreach (glob("$seedersDir/*.php") as $file) {
-            $seeder = require $file;
-            if (method_exists($seeder, 'run')) {
-                $seeder->run();
-                $output->writeln("<info>✅ Données insérées via : " . basename($file) . "</info>");
+        $seederFiles = glob("$seederDir/*.php");
+        if (empty($seederFiles)) {
+            $io->warning("Aucun fichier seeder trouvé dans $seederDir.");
+            return BaseCommand::SUCCESS;
+        }
+
+        foreach ($seederFiles as $file) {
+            $seederClass = basename($file, '.php');
+
+            require_once $file;
+
+            if (class_exists($seederClass)) {
+                $io->text("Exécution du seeder : $seederClass");
+                (new $seederClass())->run();
+            } else {
+                $io->error("Le seeder $seederClass n'existe pas.");
             }
         }
 
-        return Command::SUCCESS;
+        $io->success('Les seeders ont été exécutés avec succès.');
+        return BaseCommand::SUCCESS;
     }
 }

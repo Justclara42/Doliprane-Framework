@@ -113,8 +113,22 @@
 
     <div class="debugbar-content">
         <div class="mb-4">
-            <?php foreach (['controller', 'request', 'sql', 'session', 'errors', 'http'] as $tab): ?>
-                <button class="tab-button" onclick="showTab('<?= $tab ?>', this)"><?= ucfirst($tab) ?></button>
+            <?php
+            $tabs = [
+                'controller' => 'shield-check',
+                'request'    => 'form-input',
+                'sql'        => 'database',
+                'session'    => 'lock',
+                'errors'     => 'alert-triangle',
+                'warnings'   => 'alert-circle',
+                'http'       => 'server',
+            ];
+            ?>
+
+            <?php foreach ($tabs as $tab => $icon): ?>
+                <button class="tab-button" onclick="showTab('<?= $tab ?>', this)">
+                    <i data-lucide="<?= $icon ?>" class="lucide"></i> <?= ucfirst($tab) ?>
+                </button>
             <?php endforeach; ?>
         </div>
 
@@ -166,10 +180,35 @@
 
         <div id="tab-errors" class="debug-tab">
             <h4><i data-lucide="alert-triangle" class="lucide"></i> Erreurs</h4>
-            <?php if (isset($GLOBALS['last_exception'])): ?>
-                <pre><?= $GLOBALS['last_exception'] ?></pre>
+            <?php if (($errors['count'] ?? 0) > 0): ?>
+                <?php foreach ($errors['list'] as $error): ?>
+                    <div class="mb-2">
+                        <strong>📍 <?= htmlspecialchars($error['file']) ?> : <?= $error['line'] ?></strong><br>
+                        <div class="text-red-700 font-semibold"><?= htmlspecialchars($error['message']) ?></div>
+                        <?php if (!empty($error['trace'])): ?>
+                            <details class="mt-1">
+                                <summary class="cursor-pointer text-gray-700">Afficher la stack trace</summary>
+                                <pre class="bg-gray-100 p-2 rounded"><?= htmlspecialchars($error['trace']) ?></pre>
+                            </details>
+                        <?php endif; ?>
+                        <hr>
+                    </div>
+                <?php endforeach; ?>
             <?php else: ?>
                 <p>Aucune erreur détectée.</p>
+            <?php endif; ?>
+        </div>
+
+        <div id="tab-warnings" class="debug-tab">
+            <h4><i data-lucide="alert-circle" class="lucide"></i> Warnings</h4>
+            <?php if (!empty($warnings)): ?>
+                <?php foreach ($warnings as $warn): ?>
+                    <div class="mb-2 text-yellow-600">
+                        ⚠️ <?= $warn['message'] ?> in <code><?= $warn['file'] ?></code> on line <?= $warn['line'] ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Aucun avertissement détecté.</p>
             <?php endif; ?>
         </div>
 
@@ -195,12 +234,28 @@
         if (window.lucide) lucide.createIcons();
     }
 
+    // Fonction pour afficher un onglet spécifique
     function showTab(tabId, btn) {
+        // Désactiver tous les onglets
         document.querySelectorAll('.debug-tab').forEach(tab => tab.classList.remove('active'));
-        document.getElementById(`tab-${tabId}`).classList.add('active');
 
+        // Activer l'onglet ciblé (sécurité : vérifier s'il existe)
+        const targetTab = document.getElementById(`tab-${tabId}`);
+        if (targetTab) {
+            targetTab.classList.add('active');
+        } else {
+            console.warn(`Aucun onglet trouvé avec l'ID : tab-${tabId}`);
+        }
+
+        // Désactiver tous les boutons
         document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+
+        // Activer le bouton actuel (sécurité : vérifier si btn est valide)
+        if (btn && btn.classList) {
+            btn.classList.add('active');
+        } else {
+            console.warn('Impossible d\'ajouter la classe active au bouton.');
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {

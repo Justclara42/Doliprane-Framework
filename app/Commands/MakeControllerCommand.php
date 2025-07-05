@@ -2,81 +2,90 @@
 
 namespace App\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use App\Commands\Base\BaseCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MakeControllerCommand extends Command
+#[AsCommand(
+    name: 'make:controller',
+    description: 'Génère un controller.'
+)]
+class MakeControllerCommand extends BaseCommand
 {
-    /**
-     * Configure the command options and arguments.
-     */
     protected function configure(): void
     {
         $this
-            ->setName('make:controller')
-            ->setDescription('Génère un controller.')
             ->addArgument('name', InputArgument::REQUIRED, 'Nom du controller (ex: UsersController)')
             ->addOption('model', 'm', InputOption::VALUE_NONE, 'Génère un modèle lié automatiquement');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $controllerName = $input->getArgument('name');
         $withModel = $input->getOption('model');
 
         $controllerClass = pathinfo($controllerName, PATHINFO_FILENAME);
-        $modelNamePlural = rtrim($controllerClass, 'Controller');       // ex: Users
-        $modelClass = rtrim($modelNamePlural, 's');                     // ex: User
+        $modelNamePlural = rtrim($controllerClass, 'Controller');       // ex : Users
+        $modelClass = rtrim($modelNamePlural, 's');                     // ex : User
         $tableName = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $modelNamePlural)); // users
 
-        // Choix du stub
-        $stubFile = $withModel ? 'ControllerWithModel.stub' : 'Controller.stub';
-        $stubPath = __DIR__ . '/../../stubs/' . $stubFile;
+        // Vérification ou création des répertoires
+        $stubPath = ROOT . '/stubs/' . ($withModel ? 'ControllerWithModel.stub' : 'Controller.stub');
+        $controllerPath = ROOT . "/app/Controllers/{$controllerClass}.php";
+        $this->ensureDirectory(dirname($controllerPath), $io, true);
 
         if (!file_exists($stubPath)) {
-            $output->writeln("<error>Stub manquant : $stubFile</error>");
-            return Command::FAILURE;
+            $io->error("Stub introuvable : $stubPath");
+            return BaseCommand::FAILURE;
         }
 
-        $stubContent = file_get_contents($stubPath);
-        $stubContent = str_replace(
+        $controllerStub = file_get_contents($stubPath);
+        $controllerContent = str_replace(
             ['{{ className }}', '{{ modelName }}'],
             [$controllerClass, $modelClass],
-            $stubContent
+            $controllerStub
         );
 
-        $controllerPath = "app/Controllers/{$controllerClass}.php";
-
         if (!file_exists($controllerPath)) {
-            file_put_contents($controllerPath, $stubContent);
-            $output->writeln("<info>✅ Controller créé : $controllerPath</info>");
+            file_put_contents($controllerPath, $controllerContent);
+            $io->success("Controller créé : $controllerPath");
         } else {
-            $output->writeln("<comment>⚠️ Fichier déjà existant : $controllerPath</comment>");
+            $io->warning("Controller déjà existant : $controllerPath");
         }
 
-        // Crée le modèle si -m
+        // Crée le modèle si l'option --model est passée
         if ($withModel) {
-            $modelPath = "app/Models/{$modelClass}.php";
-            $modelStub = __DIR__ . '/../../stubs/Model.stub';
+            $modelPath = ROOT . "/app/Models/{$modelClass}.php";
+            $modelStubPath = ROOT . '/stubs/Model.stub';
+
+            $this->ensureDirectory(dirname($modelPath), $io, true);
+
+            if (!file_exists($modelStubPath)) {
+                $io->error("Stub du modèle introuvable.");
+                return BaseCommand::FAILURE;
+            }
 
             if (!file_exists($modelPath)) {
-                $modelContent = file_get_contents($modelStub);
+                $modelStub = file_get_contents($modelStubPath);
                 $modelContent = str_replace(
                     ['{{ className }}', '{{ tableName }}'],
                     [$modelClass, $tableName],
-                    $modelContent
+                    $modelStub
                 );
 
                 file_put_contents($modelPath, $modelContent);
-                $output->writeln("<info>✅ Modèle lié créé : $modelPath</info>");
+                $io->success("Modèle lié créé : $modelPath");
             } else {
-                $output->writeln("<comment>⚠️ Modèle déjà existant : $modelPath</comment>");
+                $io->warning("Modèle déjà existant : $modelPath");
             }
         }
 
-        return Command::SUCCESS;
+        return BaseCommand::SUCCESS;
     }
 }

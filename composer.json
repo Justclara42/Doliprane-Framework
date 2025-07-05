@@ -1,28 +1,33 @@
 {
-  "autoload": {
-    "psr-4": {
-      "App\\": "app/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "bin": ["app/Commands/LangScanCommand.php"],
-  "require": {
-    "vlucas/phpdotenv": "^5.5",
-    "illuminate/database": "^12.19",
-    "symfony/console": "^7.3",
-    "fakerphp/faker": "^1.24",
-    "illuminate/events": "^12.19"
-  },
-  "require-dev": {
-    "pestphp/pest": "^3.8"
-  },
-  "config": {
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
-    }
-  }
-}
+     "autoload": {
+       "psr-4": {
+         "App\\": "app/"
+       }
+     },
+     "autoload-dev": {
+       "psr-4": {
+         "Tests\\": "tests/"
+       }
+     },
+     "require": {
+       "vlucas/phpdotenv": "^5.5",
+       "illuminate/database": "^12.19",
+       "symfony/console": "^7.3",
+       "fakerphp/faker": "^1.24",
+       "illuminate/events": "^12.19"
+     },
+     "require-dev": {
+       "pestphp/pest": "^3.8"
+     },
+     "config": {
+       "allow-plugins": {
+         "pestphp/pest-plugin": true
+       }
+     },
+   "scripts": {
+       "test": "vendor/bin/pest",
+       "post-install-cmd": [
+           "@dump-autoload"
+       ]
+   }
+   }

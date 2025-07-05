@@ -10,8 +10,10 @@ use App\Debug\Collectors\RouteCollector;
 use App\Debug\Collectors\DatabaseCollector;
 use App\Debug\Collectors\RequestCollector;
 use App\Debug\Collectors\PhpInfoCollector;
-use \App\Debug\Collectors\ControllerCollector;
-use \App\Debug\Collectors\ModelCollector;
+use App\Debug\Collectors\ControllerCollector;
+use App\Debug\Collectors\ModelCollector;
+use App\Debug\ErrorLogger;
+
 class DebugManager
 {
     /** @var CollectorInterface[] */
@@ -54,6 +56,21 @@ class DebugManager
                 $this->collectedData[$name] = ['error' => $e->getMessage()];
             }
         }
+        if (isset($GLOBALS['__caught_exception'])) {
+            $e = $GLOBALS['__caught_exception'];
+            ErrorLogger::logError(
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine(),
+                $e->getTraceAsString()
+            );
+        }
+
+        $this->collectedData['errors'] = [
+            'count' => count(ErrorLogger::getErrors()),
+            'list' => ErrorLogger::getErrors(),
+        ];
+        $this->collectedData['warnings'] = ErrorLogger::getWarnings();
     }
 
     /**

@@ -12,5 +12,9 @@
         Le framework <strong>Doliprane</strong> a été conçu pour être léger, rapide et évolutif.
         Il est idéal pour apprendre à construire une architecture MVC, gérer les vues, les routes et les composants front.
     </p>
+    <p>
+        Ce framework est inspiré par les concepts de Laravel, mais il est simplifié pour faciliter la compréhension des bases du développement web.
+        Il utilise PHP et PDO pour la gestion de la base de données, et il est conçu pour être facilement extensible.
+    </p>
 </section>
 @endsection
